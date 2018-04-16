@@ -680,16 +680,7 @@ class User(object):
             grant = row[0].replace(base_user_ticks, new_user_ticks, 1)
 
             # Need to remove the IDENTIFIED BY clause for the base user.
-            search_str = "IDENTIFIED BY PASSWORD"
-            try:
-                start = grant.index(search_str)
-            except:
-                start = 0
-
-            if start > 0:
-                end = grant.index("'", start + len(search_str) + 2) + 2
-                grant = grant[0:start] + grant[end:]
-
+            grant = re.sub(r"IDENTIFIED\sBY\sPASSWORD(?:(?:\s<secret>)|(?:\s\'[^\']+\')?)",'',grant)
             if self.verbosity > 0:
                 print grant
 
